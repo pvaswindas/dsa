@@ -5,44 +5,64 @@ class Graph:
     def create_vertex(self, vertex):
         self.graph[vertex] = []
 
-    def add_edges(self, edges, is_direct=False):
-        for start, end in edges:
-            if start and end:
-                if start not in self.graph:
-                    self.create_vertex(start)
-                if end not in self.graph:
-                    self.create_vertex(end)
-                self.graph[start].append(end)
+    def delete_vertex(self, vertex):
+        if vertex in self.graph:
+            self.graph.pop(vertex)
+        for key, value in self.graph.items():
+            if vertex in value:
+                value.remove(vertex)
+
+    def add_node(self, v1, v2=None, is_direct=False):
+        if v1 and not isinstance(v1, bool):
+            if v1 not in self.graph:
+                self.create_vertex(v1)
+            if v2 and not isinstance(v2, bool):
+                if v2 not in self.graph:
+                    self.create_vertex(v2)
+                self.graph[v1].append(v2)
                 if is_direct:
-                    self.graph[end].append(start)
-            elif start:
-                if start not in self.graph:
-                    self.create_vertex(start)
+                    self.graph[v2].append(v1)
+        elif v2 and not isinstance(v2, bool):
+            if v2 not in self.graph:
+                self.create_vertex(v2)
 
-    def display_all(self):
-        print(self.graph)
+    def bfs(self, start_vertex):
+        visited = set()
+        queue = [start_vertex]
 
-    def add_node(self, vertex1, vertex2=None, is_direct=False):
-        if vertex1 and not isinstance(vertex1, bool):
-            if vertex1 not in self.graph:
-                self.create_vertex(vertex1)
-            if vertex2 and not isinstance(vertex2, bool):
-                if vertex2 not in self.graph:
-                    self.create_vertex(vertex2)
-                self.graph[vertex1].append(vertex2)
-                if is_direct:
-                    self.graph[vertex2].append(vertex1)
-        elif vertex2:
-            if vertex2 not in self.graph:
-                self.create_vertex(vertex2)
+        while queue:
+            vertex = queue.pop(0)
+            if vertex not in visited:
+                print(vertex, end=" ")
+                visited.add(vertex)
+                neighbors_to_visit = [
+                    neighbor for neighbor in self.graph[vertex]
+                    if neighbor not in visited
+                ]
+                queue.extend(neighbors_to_visit)
+        print()
+
+    def dfs(self, start_vertex):
+        visited = set()
+        stack = [start_vertex]
+
+        while stack:
+            vertex = stack.pop()
+            if vertex not in visited:
+                print(vertex, end=" ")
+                visited.add(vertex)
+                neighbors_to_visit = [
+                    neighbor for neighbor in self.graph[vertex]
+                    if neighbor not in visited
+                ]
+                stack.extend(neighbors_to_visit)
+        print()
 
 
-routes = [
-    ("Mumbai", "Paris"),
-    ("New York", "Paris"),
-    ("Mumbai", "New York"),
-]
 graph = Graph()
 graph.add_node("Mumbai", "Paris")
+graph.add_node("Paris", "New York", True)
+graph.add_node("Delhi", "Dubai", True)
+graph.add_node("Dubai", "Paris", True)
 
-graph.display_all()
+graph.bfs("Dubai")
