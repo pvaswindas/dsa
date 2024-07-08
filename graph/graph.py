@@ -35,7 +35,6 @@ class Graph:
         elif vertex2:
             if vertex2 not in self.graph:
                 self.create_vertex(vertex2)
-                self.create_vertex(vertex2)
 
 
 routes = [
