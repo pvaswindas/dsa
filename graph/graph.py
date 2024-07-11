@@ -5,13 +5,6 @@ class Graph:
     def create_vertex(self, vertex):
         self.graph[vertex] = []
 
-    def delete_vertex(self, vertex):
-        if vertex in self.graph:
-            self.graph.pop(vertex)
-        for key, value in self.graph.items():
-            if vertex in value:
-                value.remove(vertex)
-
     def add_node(self, v1, v2=None, is_direct=False):
         if v1 and not isinstance(v1, bool):
             if v1 not in self.graph:
@@ -26,10 +19,16 @@ class Graph:
             if v2 not in self.graph:
                 self.create_vertex(v2)
 
+    def delete_vertex(self, vertex):
+        if vertex in self.graph:
+            self.graph.remove(vertex)
+        for key, value in self.graph.items():
+            if vertex in value:
+                value.remove(vertex)
+
     def bfs(self, start_vertex):
         visited = set()
         queue = [start_vertex]
-
         while queue:
             vertex = queue.pop(0)
             if vertex not in visited:
@@ -45,7 +44,6 @@ class Graph:
     def dfs(self, start_vertex):
         visited = set()
         stack = [start_vertex]
-
         while stack:
             vertex = stack.pop()
             if vertex not in visited:
@@ -66,3 +64,4 @@ graph.add_node("Delhi", "Dubai", True)
 graph.add_node("Dubai", "Paris", True)
 
 graph.bfs("Dubai")
+graph.dfs("Dubai")
